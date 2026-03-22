@@ -50,29 +50,29 @@ module chamferCubeImpl(sizeX, sizeY, sizeZ, chamferHeight, chamferX, chamferY, c
     chamferZ = (chamferZ == undef) ? [1, 1, 1, 1] : chamferZ;
     chamferCLength = sqrt(chamferHeight * chamferHeight * 2);
 
-    translate([(center) ? -sizeX/2 : 0,(center) ? -sizeY/2 : 0,(center) ? -sizeZ/2 : 0]) {    
-      difference() {
-          cube([sizeX, sizeY, sizeZ]);
-          for(x = [0 : 3]) {
-              chamferSide1 = min(x, 1) - floor(x / 3); // 0 1 1 0
-              chamferSide2 = floor(x / 2); // 0 0 1 1
-              if(chamferX[x]) {
-                  translate([-0.1, chamferSide1 * sizeY, -chamferHeight + chamferSide2 * sizeZ])
-                  rotate([45, 0, 0])
-                  cube([sizeX + 0.2, chamferCLength, chamferCLength]);
-              }
-              if(chamferY[x]) {
-                  translate([-chamferHeight + chamferSide2 * sizeX, -0.1, chamferSide1 * sizeZ])
-                  rotate([0, 45, 0])
-                  cube([chamferCLength, sizeY + 0.2, chamferCLength]);
-              }
-              if(chamferZ[x]) {
-                  translate([chamferSide1 * sizeX, -chamferHeight + chamferSide2 * sizeY, -0.1])
-                  rotate([0, 0, 45])
-                  cube([chamferCLength, chamferCLength, sizeZ + 0.2]);
-              }
-          }
-      }
+    translate([(center) ? -sizeX / 2 : 0, (center) ? -sizeY / 2 : 0, (center) ? -sizeZ / 2 : 0]) {
+        difference() {
+            cube([sizeX, sizeY, sizeZ]);
+            for(x = [0 : 3]) {
+                chamferSide1 = min(x, 1) - floor(x / 3); // 0 1 1 0
+                chamferSide2 = floor(x / 2); // 0 0 1 1
+                if(chamferX[x]) {
+                    translate([-0.1, chamferSide1 * sizeY, -chamferHeight + chamferSide2 * sizeZ])
+                        rotate([45, 0, 0])
+                            cube([sizeX + 0.2, chamferCLength, chamferCLength]);
+                }
+                if(chamferY[x]) {
+                    translate([-chamferHeight + chamferSide2 * sizeX, -0.1, chamferSide1 * sizeZ])
+                        rotate([0, 45, 0])
+                            cube([chamferCLength, sizeY + 0.2, chamferCLength]);
+                }
+                if(chamferZ[x]) {
+                    translate([chamferSide1 * sizeX, -chamferHeight + chamferSide2 * sizeY, -0.1])
+                        rotate([0, 0, 45])
+                            cube([chamferCLength, chamferCLength, sizeZ + 0.2]);
+                }
+            }
+        }
     }
 }
 
@@ -84,7 +84,8 @@ module chamferCubeImpl(sizeX, sizeY, sizeZ, chamferHeight, chamferX, chamferY, c
   * @param  h    Height of the cylinder
   * @param  r    Radius of the cylinder (At the bottom)
   * @param  r2   Radius of the cylinder (At the top)
-  * @param  d    Diameter of the cylinder (at the bottom)
+  * @param  d    Diameter of the cylinder (At the bottom)
+  * @param  d2   Diameter of the cylinder (At the top)
   * @param  ch   The "height" of the chamfer at radius 1 as
   *                seen from one of the dimensional planes (The
   *                real length is side c in a right angled triangle)
@@ -97,12 +98,11 @@ module chamferCubeImpl(sizeX, sizeY, sizeZ, chamferHeight, chamferX, chamferY, c
   *                good quality, range from 0.0 to 2.0
   * @param center Center the cylinder on the origin
   */
-module chamferCylinder(h, r, r2 = undef, d = undef, d1= undef, d2=undef, ch = 1, ch2 = undef, a = 0, q = -1.0, height = undef, radius = undef, radius2 = undef, chamferHeight = undef, chamferHeight2 = undef, angle = undef, quality = undef, center=false) {
+module chamferCylinder(h, r = undef, r2 = undef, ch = 1, ch2 = undef, a = 0, q = -1.0, height = undef, radius = undef, radius2 = undef, chamferHeight = undef, chamferHeight2 = undef, angle = undef, quality = undef, d = undef, d2 = undef, center = false) {
     // keep backwards compatibility
-    d   = (d1 != undef) ? d1 : d;
     h   = (height == undef) ? h : height;
-    r   = (radius == undef) ? ((d == undef) ? r : d/2)  : radius;
-    r2  = (radius2 == undef) ? ((d2==undef) ? r2 : d2/2) : radius2;
+    r   = (d != undef) ? d/2 : r;
+    r2  = (d2 != undef) ? d2/2 : r2;
     ch  = (chamferHeight == undef) ? ch : chamferHeight;
     ch2 = (chamferHeight2 == undef) ? ch2 : chamferHeight2;
     a   = (angle == undef) ? a : angle;
@@ -124,9 +124,11 @@ module chamferCylinder(h, r, r2 = undef, d = undef, d1= undef, d2=undef, ch = 1,
         if(chamferHeight >= 0 || chamferHeight2 >= 0) {
             hull() {
                 if(chamferHeight2 > 0) {
-                    translate([0, 0, height - abs(chamferHeight2)]) cylinder(abs(chamferHeight2), r1 = radius2, r2 = radius2 - chamferHeight2, $fn = cSegs);
+                    translate([0, 0, height - abs(chamferHeight2)])
+                        cylinder(abs(chamferHeight2), r1 = radius2, r2 = radius2 - chamferHeight2, $fn = cSegs);
                 }
-                translate([0, 0, abs(chamferHeight)]) cylinder(height - abs(chamferHeight2) - abs(chamferHeight), r1 = radius, r2 = radius2, $fn = cSegs);
+                translate([0, 0, abs(chamferHeight)])
+                    cylinder(height - abs(chamferHeight2) - abs(chamferHeight), r1 = radius, r2 = radius2, $fn = cSegs);
                 if(chamferHeight > 0) {
                     cylinder(abs(chamferHeight), r1 = radius - chamferHeight, r2 = radius, $fn = cSegs);
                 }
@@ -135,16 +137,19 @@ module chamferCylinder(h, r, r2 = undef, d = undef, d1= undef, d2=undef, ch = 1,
 
         if(chamferHeight < 0 || chamferHeight2 < 0) {
             if(chamferHeight2 < 0) {
-                translate([0, 0, height - abs(chamferHeight2)]) cylinder(abs(chamferHeight2), r1 = radius2, r2 = radius2 - chamferHeight2, $fn = cSegs);
+                translate([0, 0, height - abs(chamferHeight2)])
+                    cylinder(abs(chamferHeight2), r1 = radius2, r2 = radius2 - chamferHeight2, $fn = cSegs);
             }
-            translate([0, 0, abs(chamferHeight) - lowerOverLength]) cylinder(height - abs(chamferHeight2) - abs(chamferHeight) + lowerOverLength + upperOverLength, r1 = radius, r2 = radius2, $fn = cSegs);
+            translate([0, 0, abs(chamferHeight) - lowerOverLength])
+                cylinder(height - abs(chamferHeight2) - abs(chamferHeight) + lowerOverLength + upperOverLength, r1 = radius, r2 = radius2, $fn = cSegs);
             if(chamferHeight < 0) {
                 cylinder(abs(chamferHeight), r1 = radius - chamferHeight, r2 = radius, $fn = cSegs);
             }
         }
     }
     module box(brim = abs(min(chamferHeight2, 0)) + 1) {
-        translate([-radius - brim, 0, -brim]) cube([radius * 2 + brim * 2, radius + brim, height + brim * 2]);
+        translate([-radius - brim, 0, -brim])
+            cube([radius * 2 + brim * 2, radius + brim, height + brim * 2]);
     }
     module hcc() {
         intersection() {
@@ -152,26 +157,46 @@ module chamferCylinder(h, r, r2 = undef, d = undef, d1= undef, d2=undef, ch = 1,
             box();
         }
     }
-    if(angle <= 0 || angle >= 360) 
-      if (!center) {
-        cc();
-      }
-      else {
-        translate([0,0,-height/2]) cc();
-      }
-    else {
-        if(angle > 180) 
-          if (center) {
-            translate([0,0,-height/2]) hcc();
-          }
-          else {
-            hcc();
-          }
-        difference() {
-            if(angle <= 180) hcc();
-            else rotate([0, 0, 180]) hcc();
-            rotate([0, 0, angle]) box(abs(min(chamferHeight2, 0)) + radius);
+    if (angle <= 0 || angle >= 360) {
+        if (!center) {
+            cc();
+        } else {
+            translate([0, 0, -height / 2]) cc();
         }
+    }
+    else {
+        if (angle > 180)
+            if (!center) {
+                hcc();
+            } else {
+                translate([0, 0, -height / 2]) hcc();
+            }
+            difference() {
+                if (angle <= 180) {
+                    if (!center) {
+                        hcc();
+                    } else {
+                        translate([0, 0, -height / 2]) hcc();
+                    }
+                } else {
+                    if (!center) {
+                        rotate([0, 0, 180]) hcc();
+                    }
+                    else {
+                        translate([0, 0, -height / 2])
+                            rotate([0, 0, 180])
+                                hcc();
+                    }
+                }
+                rotate([0, 0, angle]) {
+                    if (!center) {
+                        box(abs(min(chamferHeight2, 0)) + radius);
+                    } else {
+                        translate([0, 0, -height / 2])
+                            box(abs(min(chamferHeight2, 0)) + radius);
+                    }
+                }
+            }
     }
 }
 

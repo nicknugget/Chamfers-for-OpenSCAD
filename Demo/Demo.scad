@@ -36,11 +36,18 @@ include <../Chamfer.scad>;
   * @param  ch        The "height" of the chamfers as seen from
   *                     one of the dimensional planes (The real
   *                     length is side c in a right angled triangle)
+  * @param center     Center the cube on the origin
   */
-translate([-35, -5, 60]) chamferCube([10, 10, 10]);
-translate([-20, -5, 60]) chamferCube([10, 10, 10], undef, 2);
-translate([-5, -5, 60])  chamferCube([10, 10, 10], [[1, 0, 0, 0]]);
-translate([10, -5, 60])  chamferCube([10, 10, 10], [[0, 0, 0, 0], [1, 1, 1, 1], [0, 0, 0, 0]], 3);
+translate([-35, -5, 130]) chamferCube([10, 10, 10]);
+translate([-20, -5, 130]) chamferCube([10, 10, 10], undef, 2);
+translate([-5, -5, 130])  chamferCube([10, 10, 10], [[1, 0, 0, 0]]);
+translate([10, -5, 130])  chamferCube([10, 10, 10], [[0, 0, 0, 0], [1, 1, 1, 1], [0, 0, 0, 0]], 3);
+// Centered
+translate([-30, 0, 120]) chamferCube([10, 10, 10], center=true);
+translate([-15, 0, 120]) chamferCube([10, 10, 10], undef, 2, center=true);
+translate([0, 0, 120])  chamferCube([10, 10, 10], [[1, 0, 0, 0]], center=true);
+translate([15, 0, 120])  chamferCube([10, 10, 10], [[0, 0, 0, 0], [1, 1, 1, 1], [0, 0, 0, 0]], 3, center=true);
+
 
 
 /**
@@ -65,23 +72,44 @@ translate([10, -5, 60])  chamferCube([10, 10, 10], [[0, 0, 0, 0], [1, 1, 1, 1], 
   *                calculation is turned off and the value is directly
   *                used in $fn
   */
-translate([-30, 0, 45]) chamferCylinder(10, 5);
-translate([-15, 0, 45]) chamferCylinder(10, 5, 5,  2,  4);
-translate([0, 0, 45])   chamferCylinder(10, 5, 5,  3, -1);
-translate([15, 0, 45])  chamferCylinder(10, 5, 5,  1,  1, 90);
-translate([30, 0, 45])  chamferCylinder(10, 5, 5, -1,  -1, 240);
-// cones
-translate([-30, 0, 30]) chamferCylinder(10, 5, 2,  1,  0);
-translate([-15, 0, 30]) chamferCylinder(10, 5, 2,  3,  1);
-translate([0, 0, 30])   chamferCylinder(10, 5, 2, -1);
-translate([15, 0, 30])  chamferCylinder(10, 5, 2,  1,  1, 90);
-translate([30, 0, 30])  chamferCylinder(10, 5, 2, -1, -1, 240);
+// Cylinders
+translate([-30, 0, 100]) chamferCylinder(10, 5);
+translate([-15, 0, 100]) chamferCylinder(10, 5, 5,  2,  4);
+translate([0, 0, 100])   chamferCylinder(10, 5, 5,  3, -1);
+translate([15, 0, 100])  chamferCylinder(10, 5, 5,  1,  1, 90);
+translate([30, 0, 100])  chamferCylinder(10, 5, 5, -1, -1, 240);
+// Cylinders with diameter instead of radius and centered
+translate([-30, 0, 90]) chamferCylinder(10, d=10, center=true);
+translate([-15, 0, 90]) chamferCylinder(10, d=10, d2=10, ch=2,  ch2=4,  center=true);
+translate([0, 0, 90])   chamferCylinder(10, d=10, d2=10, ch=3,  ch2=-1, center=true);
+translate([15, 0, 90])  chamferCylinder(10, d=10, d2=10, ch=1,  ch2=1,  a=90, center=true);
+translate([30, 0, 90])  chamferCylinder(10, d=10, d2=10, ch=-1, ch2=-1, a=240, center=true);
+
+// Cones
+translate([-30, 0, 70]) chamferCylinder(10, 5, 2,  1, 0);
+translate([-15, 0, 70]) chamferCylinder(10, 5, 2,  3, 1);
+translate([0, 0, 70])   chamferCylinder(10, 5, 2, -1);
+translate([15, 0, 70])  chamferCylinder(10, 5, 2,  1,  1, 90);
+translate([30, 0, 70])  chamferCylinder(10, 5, 2, -1, -1, 240);
+// Cones with diameter instead of radius and centered
+translate([-30, 0, 60]) chamferCylinder(10, d=10, d2=4, ch=1,  ch2=0, center=true);
+translate([-15, 0, 60]) chamferCylinder(10, d=10, d2=4, ch=3,  ch2=1, center=true);
+translate([0, 0, 60])   chamferCylinder(10, d=10, d2=4, ch=-1, center=true);
+translate([15, 0, 60])  chamferCylinder(10, d=10, d2=4, ch=1,  ch2=1,  a=90, center=true);
+translate([30, 0, 60])  chamferCylinder(10, d=10, d2=4, ch=-1, ch2=-1, a=240, center=true);
+
 // simple forms
-translate([-30, 0, 15]) chamferCylinder(10, 5, 5, 1,  1, 360, 3);
-translate([-15, 0, 15]) chamferCylinder(10, 5, 5, 1,  1, 360, 4);
-translate([0, 0, 15])   chamferCylinder(10, 5, 5, 1,  1, 360, 5);
-translate([15, 0, 15])  chamferCylinder(10, 5, 5, 1,  1, 360, 6);
-translate([30, 0, 15])  chamferCylinder(10, 5, 5, 1,  1, 360, 7);
+translate([-30, 0, 40]) chamferCylinder(10, 5, 5, 1,  1, 360, 3);
+translate([-15, 0, 40]) chamferCylinder(10, 5, 5, 1,  1, 360, 4);
+translate([0, 0, 40])   chamferCylinder(10, 5, 5, 1,  1, 360, 5);
+translate([15, 0, 40])  chamferCylinder(10, 5, 5, 1,  1, 360, 6);
+translate([30, 0, 40])  chamferCylinder(10, 5, 5, 1,  1, 360, 7);
+// Simple forms with diameter instead radius and centered
+translate([-30, 0, 30]) chamferCylinder(10, d=10, d2=10, ch=1, ch2=1, a=360, q=3, center=true);
+translate([-15, 0, 30]) chamferCylinder(10, d=10, d2=10, ch=1, ch2=1, a=360, q=4, center=true);
+translate([0, 0, 30])   chamferCylinder(10, d=10, d2=10, ch=1, ch2=1, a=360, q=5, center=true);
+translate([15, 0, 30])  chamferCylinder(10, d=10, d2=10, ch=1, ch2=1, a=360, q=6, center=true);
+translate([30, 0, 30])  chamferCylinder(10, d=10, d2=10, ch=1, ch2=1, a=360, q=7, center=true);
 
 /**
   * circleSegments calculates the number of segments needed to maintain
@@ -96,9 +124,15 @@ translate([30, 0, 15])  chamferCylinder(10, 5, 5, 1,  1, 360, 7);
   *
   * @return  The number of segments for the circle
   */
-translate([-30, 0, 0]) cylinder(h=10, r=1, $fn=circleSegments(1));
-translate([-15, 0, 0]) cylinder(h=10, r=3, $fn=circleSegments(3));
-translate([0, 0, 0])   cylinder(h=10, r=5, $fn=circleSegments(5));
-translate([15, 0, 0])  cylinder(h=10, r=5, $fn=circleSegments(5, 0.5));
-translate([30, 0, 0])  cylinder(h=10, r=5, $fn=circleSegments(5, 1.5));
+translate([-30, 0, 10]) cylinder(h=10, r=1, $fn=circleSegments(1));
+translate([-15, 0, 10]) cylinder(h=10, r=3, $fn=circleSegments(3));
+translate([0, 0, 10])   cylinder(h=10, r=5, $fn=circleSegments(5));
+translate([15, 0, 10])  cylinder(h=10, r=5, $fn=circleSegments(5, 0.5));
+translate([30, 0, 10])  cylinder(h=10, r=5, $fn=circleSegments(5, 1.5));
+// Circle segments widt diameter instead of radius and centered
+translate([-30, 0, 0]) cylinder(h=10, d=2, $fn=circleSegments(1), center=true);
+translate([-15, 0, 0]) cylinder(h=10, d=6, $fn=circleSegments(3), center=true);
+translate([0, 0, 0])   cylinder(h=10, d=10, $fn=circleSegments(5), center=true);
+translate([15, 0, 0])  cylinder(h=10, d=10, $fn=circleSegments(5, 0.5), center=true);
+translate([30, 0, 0])  cylinder(h=10, d=10, $fn=circleSegments(5, 1.5), center=true);
 
